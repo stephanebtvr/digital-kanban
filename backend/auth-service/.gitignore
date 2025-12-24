@@ -19,9 +19,6 @@ target/
 *.iml
 *.ipr
 
-### MACBOOK ###
-.DS_Store
-
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -34,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### MACBOOK ###
+.DS_Store
