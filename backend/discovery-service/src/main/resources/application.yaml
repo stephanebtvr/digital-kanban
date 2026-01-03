@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: discovery-service
+server:
+  port: 8761
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    # On désactive ces deux options car c'est le serveur lui-même
+    register-with-eureka: false
+    fetch-registry: false
+  server:
+    # En développement, on désactive le mode auto-préservation
+    # pour que les services déconnectés disparaissent instantanément du dashboard
+    enable-self-preservation: false

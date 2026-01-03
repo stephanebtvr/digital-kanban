@@ -1,0 +1,36 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          "[/**]":
+            allowedOrigins: "http://localhost:4200" #Pour Angular
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+      routes:
+        # Route pour l'Authentification
+        - id: auth-service
+          uri: lb://auth-service # lb = load balancer (via Eureka)
+          predicates:
+            - Path=/api/auth/**
+
+        # Route pour les Boards (à créer ensuite)
+        - id: board-service
+          uri: lb://board-service
+          predicates:
+            - Path=/api/boards/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
