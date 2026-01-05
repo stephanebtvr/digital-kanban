@@ -1,4 +1,5 @@
 services:
+  # --- BASES DE DONNÉES ---
   postgres-auth:
     image: postgres:16-alpine
     container_name: kanban-db-auth
@@ -10,6 +11,84 @@ services:
       - "5432:5432"
     volumes:
       - postgres_auth_data:/var/lib/postgresql/data
+    networks:
+      - kanban-network
+
+  postgres-board:
+    image: postgres:16-alpine
+    container_name: kanban-db-board
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: kanban_board_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_board_data:/var/lib/postgresql/data
+    networks:
+      - kanban-network
+
+  # --- MICROSERVICES ---
+  discovery-service:
+    build: ../backend/discovery-service # REMONTÉE D'UN NIVEAU
+    container_name: discovery-service
+    ports:
+      - "8761:8761"
+    networks:
+      - kanban-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  gateway-service:
+    build: ../backend/gateway-service # REMONTÉE D'UN NIVEAU
+    container_name: gateway-service
+    ports:
+      - "8080:8080"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+    networks:
+      - kanban-network
+
+  auth-service:
+    build: ../backend/auth-service
+    container_name: auth-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-auth:5432/${DB_AUTH_NAME}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRATION=${JWT_EXPIRATION}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+    depends_on:
+      - postgres-auth
+      - discovery-service
+    networks:
+      - kanban-network
+
+  board-service:
+    build: ../backend/board-service
+    container_name: board-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-board:5432/kanban_board_db
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+    depends_on:
+      - postgres-board
+      - discovery-service
+    networks:
+      - kanban-network
+
+networks:
+  kanban-network:
+    driver: bridge
 
 volumes:
   postgres_auth_data:
+  postgres_board_data:

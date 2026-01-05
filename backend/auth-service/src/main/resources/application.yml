@@ -18,6 +18,10 @@ spring:
 application:
   security:
     jwt:
-      # On utilise JWT_SECRET et JWT_EXPIRATION de ton .env
       secret-key: ${JWT_SECRET}
       expiration: ${JWT_EXPIRATION}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
