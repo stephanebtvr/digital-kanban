@@ -1,14 +1,15 @@
-package com.kanban.board.controller;
+package com.kanban.board_service.controller;
 
-import com.kanban.board.model.Board;
-import com.kanban.board.service.BoardService;
+import com.kanban.board_service.model.Board;
+import com.kanban.board_service.service.BoardService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/boards")
+@RequestMapping("/")
 @RequiredArgsConstructor
 public class BoardController {
     private final BoardService boardService;

@@ -15,6 +15,13 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    # Cette option est cruciale pour que Swagger utilise l'URL de la gateway et non celle du service interne
+    use-root-path: true
 
 eureka:
   client:

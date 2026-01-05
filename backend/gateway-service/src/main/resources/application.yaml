@@ -9,28 +9,35 @@ spring:
       globalcors:
         cors-configurations:
           "[/**]":
-            allowedOrigins: "http://localhost:4200" #Pour Angular
-            allowedMethods:
-              - GET
-              - POST
-              - PUT
-              - DELETE
-              - OPTIONS
+            allowedOrigins: "http://localhost:4200"
+            allowedMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
             allowedHeaders: "*"
       routes:
-        # Route pour l'Authentification
         - id: auth-service
-          uri: lb://auth-service # lb = load balancer (via Eureka)
+          uri: lb://AUTH-SERVICE
           predicates:
             - Path=/api/auth/**
+          # Ce filtre est important pour que le microservice reçoive le bon chemin
+          filters:
+            - RewritePath=/api/auth/(?<path>.*), /$\{path}
 
-        # Route pour les Boards (à créer ensuite)
         - id: board-service
-          uri: lb://board-service
+          uri: lb://BOARD-SERVICE
           predicates:
             - Path=/api/boards/**
+          filters:
+            - RewritePath=/api/boards/(?<path>.*), /$\{path}
+springdoc:
+  swagger-ui:
+    urls:
+      # On aligne les URLs sur les predicates Path définis plus haut
+      - name: Auth Service
+        url: /api/auth/v3/api-docs
+      - name: Board Service
+        url: /api/boards/v3/api-docs
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      # Rappel : utilise discovery-service si tu lances via Docker
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://discovery-service:8761/eureka/}

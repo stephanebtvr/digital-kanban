@@ -16,7 +16,7 @@ import com.kanban.auth_service.repository.UserRepository;
 import com.kanban.auth_service.security.JwtService;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/")
 @RequiredArgsConstructor
 public class AuthController {
 

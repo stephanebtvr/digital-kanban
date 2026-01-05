@@ -1,4 +1,4 @@
-package com.kanban.board.model;
+package com.kanban.board_service.model;
 
 import jakarta.persistence.*;
 import lombok.*;

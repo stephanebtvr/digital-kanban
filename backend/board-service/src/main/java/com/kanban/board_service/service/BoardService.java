@@ -1,7 +1,9 @@
-package com.kanban.board.service;
+package com.kanban.board_service.service;
 
-import com.kanban.board.model.*;
-import com.kanban.board.repository.BoardRepository;
+import com.kanban.board_service.model.Board;
+import com.kanban.board_service.model.ColumnEntity;
+import com.kanban.board_service.repository.BoardRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
