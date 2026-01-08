@@ -20,6 +20,11 @@ html {
   );
 }
 
+:root {
+  --apple-bg: #f5f5f7;
+  --apple-card: rgba(255, 255, 255, 0.8);
+}
+
 body {
   // Default the application to a light color theme. This can be changed to
   // `dark` to enable the dark color theme, or to `light dark` to defer to the
@@ -36,5 +41,13 @@ body {
   // Reset the user agent margin.
   margin: 0;
   height: 100%;
+}
+
+.glass-card {
+  background: var(--apple-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 1.5rem;
 }
 /* You can add global styles to this file, and also import other style files */
